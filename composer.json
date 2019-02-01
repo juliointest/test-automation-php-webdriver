@@ -1,0 +1,12 @@
+{
+  "require": {
+    "phpunit/phpunit": "7.5.0",
+    "facebook/webdriver": "1.6.0",
+    "bravo3/properties": "1.0.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Tests\\":"tests/"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+endpoints:
+  remoteWebDriver: http://localhost:4444
+  cfrHomePage: https://www.cfr.org
+timeouts:
+  connectionTimeout: 60000
+  requestTimeout: 60000
+  minimumAwaitingForElements: 5
