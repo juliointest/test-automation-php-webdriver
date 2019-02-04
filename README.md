@@ -24,7 +24,7 @@ The Test Classes are stored inside the folder tests.
 
 ## Behat
 
-Behat is a PHP library inspired in Cucumber [link text](https://cucumber.io/), a Ruby framework, to create test scripts based on a user-friendly description written in Gherkin [link text](http://docs.behat.org/en/v2.5/guides/1.gherkin.html). The feature files are read and then Behat looks for the PHP code snippets stored in the features folder. Once it is found, Behat executed the function code. In this case, the function code has Facebook WebDriver code, to simulate the user interacting to the web site. 
+Behat is a PHP library inspired in [Cucumber](https://cucumber.io/), a Ruby framework, to create test scripts based on a user-friendly description written in [Gherkin](http://docs.behat.org/en/v2.5/guides/1.gherkin.html). The feature files are read and then Behat looks for the PHP code snippets stored in the features folder. Once it is found, Behat executed the function code. In this case, the function code has Facebook WebDriver code, to simulate the user interacting to the web site. 
 
 ## Facebook WebDriver
 
