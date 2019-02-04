@@ -22,6 +22,7 @@ Feature: Home Page
   Examples:
     | email                   | password          |
     | invalid@email.com       | invalid-password  |
+    | ql-injection@email.com  | ' or 1=1--        |
 
   Scenario: Read the First Article Showed in the Home Page
     When I access the first Article by clicking on it
