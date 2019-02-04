@@ -5,11 +5,11 @@ use Behat\Gherkin\Node\TableNode;
 use Bravo3\Properties\Conf;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
-use Facebook\WebDriver\WebDriverBy;
-use Features\Support\Support;
+use PHPUnit\Framework\Assert;
 use Features\DataTransferObjects\ArticleDataTransferObject;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
+use Features\Pages\HomePage;
 
 /**
  * Defines application features from the specific context.
@@ -17,6 +17,11 @@ use Behat\Behat\Hook\Scope\AfterScenarioScope;
 class FeatureContext implements Context
 {
     private $driver;
+    private $homePage;
+    private $searchBoxPage;
+    private $searchPage;
+    private $memberLoginPage;
+    private $articlePage;
 
     /**
      * Initializes context.
@@ -48,7 +53,8 @@ class FeatureContext implements Context
      */
     public function iAmOnTheCfrHomePage()
     {
-        $this->driver->get(Conf::get('endpoints.cfrHomePage'));
+        $this->homePage = new HomePage($this->driver);
+        $this->homePage->accessCFR();
     }
 
     /**
@@ -56,11 +62,7 @@ class FeatureContext implements Context
      */
     public function iAmAwareOfTheCookiesPolicy()
     {
-        $this->driver->findElement(
-            WebDriverBy::cssSelector('.eu-cookie-compliance-content .agree-button'))->click();
-
-        Support::waitUntilTheObjectDisappears(
-            $this->driver, WebDriverBy::cssSelector('.eu-cookie-compliance-content .agree-button'));
+        $this->homePage->closeEUCookieMessage();
     }
 
     /**
@@ -68,7 +70,7 @@ class FeatureContext implements Context
      */
     public function iVisitTheSearchArea()
     {
-        $this->driver->findElement(WebDriverBy::cssSelector('.main-nav__search-hotspot'))->click();
+        $this->searchBoxPage = $this->homePage->openSearchBox();
     }
 
     /**
@@ -76,8 +78,7 @@ class FeatureContext implements Context
      */
     public function iSearchBy($query)
     {
-        $this->driver->findElement(WebDriverBy::xpath('//*[@data-id="header_search"]'))->sendKeys($query);
-        $this->driver->findElement(WebDriverBy::cssSelector('.search-overlay .button-container__btn'))->click();
+        $this->searchPage = $this->searchBoxPage->search($query);
     }
 
     /**
@@ -85,9 +86,10 @@ class FeatureContext implements Context
      */
     public function iSeeInTheFirstArticleResults($termSearched, $amountOfTitles)
     {
-        $publicationTitles = $this->driver->findElements(WebDriverBy::xpath('//*[@class="card-search-results__title clamp-js"]//*[@class="card-search-results__highlight"][contains(text(), "' . $termSearched . '")]'));
+        $publicationTitles = $this->searchPage->getPublicationResultTitlesHighlightedWith($termSearched);
 
-        PHPUnit\Framework\Assert::assertEquals(10,
+
+        Assert::assertEquals($amountOfTitles,
             count($publicationTitles),
             'Some publication titles does not contains Venezuela');
     }
@@ -97,8 +99,7 @@ class FeatureContext implements Context
      */
     public function iVisitTheMemberLoginArea()
     {
-        $this->driver->findElement(
-            WebDriverBy::cssSelector('.main-nav__members--wider-than-tablet a'))->click();
+        $this->memberLoginPage = $this->homePage->openMemberLoginPage();
     }
 
     /**
@@ -106,9 +107,8 @@ class FeatureContext implements Context
      */
     public function submitTheFormWithInvalidData(TableNode $table)
     {
-        $this->driver->findElement(WebDriverBy::name('username'))->sendKeys($table->getHash()[0]['email']);
-        $this->driver->findElement(WebDriverBy::name('password'))->sendKeys($table->getHash()[0]['password']);
-        $this->driver->findElement(WebDriverBy::id('edit-submit'))->click();
+        $this->memberLoginPage->fillTheLoginForm($table->getHash()[0]['email'], $table->getHash()[0]['password']);
+        $this->memberLoginPage->submitTheLoginFormWithInvalidData();
     }
 
     /**
@@ -116,10 +116,9 @@ class FeatureContext implements Context
      */
     public function iSeeAMessageSayingMyMemberCredentialsAreWrong()
     {
-        $invalidCredentialsMessage = $this->driver->findElement(
-            WebDriverBy::cssSelector('.msp-account__form-item-messages-list-item'))->getText();
+        $invalidCredentialsMessage = $this->memberLoginPage->getTheErrorMessage();
 
-        PHPUnit\Framework\Assert::assertEquals('You have entered an invalid email and password.', $invalidCredentialsMessage);
+        Assert::assertEquals('You have entered an invalid email and password.', $invalidCredentialsMessage);
     }
 
     /**
@@ -127,8 +126,7 @@ class FeatureContext implements Context
      */
     public function iAccessTheFirstArticleByClickingOnIt()
     {
-        $this->driver->findElement(
-            WebDriverBy::cssSelector('.top-package-dual__articles_primary .card-article__link'))->click();
+        $this->articlePage = $this->homePage->readThePrimaryArticle();
     }
 
     /**
@@ -140,13 +138,9 @@ class FeatureContext implements Context
         $articleExpected->setArticleTitle($table->getHash()[0]['title']);
         $articleExpected->setArticleAuthor($table->getHash()[0]['author']);
 
-        $article = new ArticleDataTransferObject();
-        $article->setArticleTitle(
-            $this->driver->findElement(WebDriverBy::cssSelector('.article-header__title'))->getText());
-        $article->setArticleAuthor(
-            $this->driver->findElement(WebDriverBy::cssSelector('.article-header__link'))->getText());
+        $article = $this->articlePage->getArticleHeaderData();
 
-        PHPUnit\Framework\Assert::assertEquals($articleExpected, $article);
+        Assert::assertEquals($articleExpected, $article);
     }
 
     /** @AfterScenario */
