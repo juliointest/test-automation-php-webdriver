@@ -98,8 +98,8 @@ class HomeTests extends TestCase
     public function testThePrimaryArticleShouldHaveTheSameTitleAndAuthor()
     {
         $articleExpected = new  ArticleDataTransferObject();
-        $articleExpected->setArticleTitle('Huawei, the U.S., and Its Anxious Allies');
-        $articleExpected->setArticleAuthor('Edward Alden');
+        $articleExpected->setArticleTitle('What Would a No-Deal Brexit Look Like?');
+        $articleExpected->setArticleAuthor('Andrew Chatzky');
 
         $article = (new HomePage($this->driver))
             ->accessCFR()
