@@ -1,6 +1,6 @@
 <phpunit colors="true" bootstrap="vendor/autoload.php">
     <testsuites>
-        <testsuite name="CFR Test Suite">
+        <testsuite name="The Test Suite">
             <file>tests/HomeTests.php</file>
         </testsuite>
     </testsuites>

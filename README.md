@@ -1,6 +1,8 @@
-# PHP Test Automation using Facebook WebDriver and PageObjects
+# PHP Test Automation using: 1) Facebook WebDriver and PageObjects, and 2) Simple Example using Behat 
 
-This project was created to demonstrate how to do test automation in a Web Context using PHP. The stack used is based on PHP. The libraries used to create the test architecture are PHPUnit, Facebook WebDriver, and Bravo Property.
+This project was created to demonstrate how to do test automation in a Web Context using PHP. The stack used is based on PHP. The libraries used to create the test architecture are 1) PHPUnit, Facebook WebDriver, and Bravo Property, and 2) Behat. 
+
+Two ways to structure the Test Scripts are demonstrated here: 1) PHPUnit and 2) Behat. PHPUnit basically is a programmatic way and Behat is more user-friendly and driven by the behaviour described in feature files.  
 
 To run the Automated Test Scripts over PHP stack we need to use a Driver, in this case, Chrome Driver.
 
@@ -19,6 +21,10 @@ Each page has the same starter structure, that is an attribute to store the Brow
 PHPUnit is a library used to structure, run and assert data inside tests. In this project, I used it to organize the tests and also to have hooks to set up and tear down each test.
 
 The Test Classes are stored inside the folder tests.
+
+## Behat
+
+Behat is a PHP library inspired in Cucumber [link text](https://cucumber.io/), a Ruby framework, to create test scripts based on a user-friendly description written in Gherkin [link text](http://docs.behat.org/en/v2.5/guides/1.gherkin.html). The feature files are read and then Behat looks for the PHP code snippets stored in the features folder. Once it is found, Behat executed the function code. In this case, the function code has Facebook WebDriver code, to simulate the user interacting to the web site. 
 
 ## Facebook WebDriver
 
@@ -48,8 +54,13 @@ It will start the Chrome Driver server on the URL http://localhost:4444
 1. Open the project folder by command line prompt
 2. Run the command `composer install`
 
-### Run the test scripts
+### Running the test scripts on PHPUnit
 
 1. Open the project folder by command line prompt
-2. ./vendor/bin/phpunit --testsuite "CFR Test Suite"
+2. ./vendor/bin/phpunit --testsuite "The Test Suite"
+
+### Running the test scripts on Behat
+
+1. Open the project folder by command line prompt
+2. ./vendor/bin/behat
 
